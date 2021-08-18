@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:end="200dp"
+        android:gravity="center_horizontal"
+        android:start="200dp">
+        <shape android:shape="oval">
+            <size
+                android:width="200dp"
+                android:height="200dp" />
+            <solid android:color="@color/turquoise" />
+        </shape>
+    </item>
+
+    <item
+        android:drawable="@drawable/baseline_mic_24"
+        android:width="200dp"
+        android:height="200dp"
+        android:gravity="center_horizontal"
+        >
+
+    </item>
+
+</layer-list>
