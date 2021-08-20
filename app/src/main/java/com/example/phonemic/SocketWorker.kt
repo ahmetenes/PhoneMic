@@ -25,32 +25,30 @@ class SocketWorker(appContext: Context, params:WorkerParameters):Worker(appConte
 
     @SuppressLint("MissingPermission")
     private fun startRecording() {
-        val frequency=11025
+        val frequency=22050
         val channelConfig = AudioFormat.CHANNEL_IN_MONO
         val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
         val bufferSize =  AudioRecord.getMinBufferSize(frequency, channelConfig, audioEncoding)
         val audioRecord = AudioRecord(MediaRecorder.AudioSource.MIC,frequency,channelConfig,audioEncoding,bufferSize)
-        audioRecord?.startRecording()
-        var socket = Socket(InetAddress.getByName(IP),PORT)
-        var output = BufferedOutputStream(socket.getOutputStream())
-
+        audioRecord.startRecording()
+        val socket = Socket(IP,PORT)
+        val output = BufferedOutputStream(socket.getOutputStream())
         val byteArray = ByteArray(bufferSize)
-        while (audioRecord.recordingState==AudioRecord.RECORDSTATE_RECORDING){
+        var stepSize=0
+        while (audioRecord.recordingState==AudioRecord.RECORDSTATE_RECORDING&&stepSize<20){
+            println("BufferSize:"+bufferSize)
             audioRecord.read(byteArray,0,bufferSize)
-            audioRecord.stop()
             try {
-                if(audioRecord.recordingState==AudioRecord.RECORDSTATE_STOPPED){
-                    println("recording stopped")
+                    println("recording stopped"+(byteArray[0]))
                     output.write(byteArray)
                     output.flush()
-                    socket.close()
-                }
             }catch (err:IOException){
                 println(err.stackTrace);
             }
-
-
+            stepSize++;
         }
+        socket.close()
+        audioRecord.stop()
     }
 
 
